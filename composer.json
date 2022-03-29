@@ -1,0 +1,26 @@
+{
+    "name": "rownd/wp-auth",
+    "description": "Rownd authentication plugin for WordPress",
+    "type": "wordpress-plugin",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rownd\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rownd, Inc.",
+            "email": "hello@rownd.io"
+        }
+    ],
+    "require": {
+        "composer/installers": "^2.1",
+        "web-token/jwt-framework": "^3.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}
