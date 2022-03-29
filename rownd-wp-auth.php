@@ -52,3 +52,5 @@ if (!defined('ROWND_PLUGIN_PLUGIN_DIR')) {
 
 // require all of our src files
 require_once(plugin_dir_path(__FILE__) . '/vendor/autoload.php');
+
+new Rownd\WordPress\Plugin();
