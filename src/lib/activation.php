@@ -6,6 +6,8 @@ $rownd_settings = array();
 $rownd_settings['app_key'] = '';
 $rownd_settings['app_secret'] = '';
 
+$rownd_settings['api_url'] = 'https://api.rownd.io';
+
 // $apsl_settings['network_ordering'] = $social_networks;
 // //facebook settings
 // $facebook_parameters = array('apsl_facebook_enable' => '0', 'apsl_facebook_app_id' => '', 'apsl_facebook_app_secret' => '');

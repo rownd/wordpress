@@ -19,7 +19,7 @@ class Plugin
 		add_action('wp_enqueue_scripts', array($this, 'register_frontend_assets')); // registers all the assets required for the frontend
 		add_action('admin_post_rownd_save_settings', array($this, 'save_settings')); //save settings of a plugin
 
-		add_action('init', array($this, 'handle_authenticate')); //check for the social logins
+		// add_action('init', array($this, 'handle_authenticate')); //check for the social logins
 
 	}
 
@@ -30,12 +30,18 @@ class Plugin
 	//     }
 	// }
 
+	function plugin_activation()
+	{
+		if (!get_option(ROWND_PLUGIN_SETTINGS)) {
+			include_once('lib/activation.php');
+		}
+	}
 
 	function register_plugin_api()
 	{
 		register_rest_route('rownd/v1', '/auth', array(
 			'methods' => 'POST',
-			'callback' => array($this, 'authenticate_user'),
+			'callback' => array($this, 'handle_authenticate'),
 		));
 	}
 
@@ -79,8 +85,27 @@ class Plugin
 		// wp_enqueue_style( 'apsl-frontend-css', APSL_CSS_DIR . '/frontend.css', '', APSL_VERSION );
 	}
 
-	function handle_authenticate()
+	function handle_authenticate($data)
 	{
-		new lib\Authenticator();
+		$respData = new \stdClass();
+		$statusCode = 200;
+		$token = $data['access_token'];
+
+		try {
+			$tokenHandler = new lib\TokenHandler($data);
+			$decodedToken = $tokenHandler->validateToken($token);
+
+			$respData->message = 'Authentication successful';
+			$respData->should_refresh_page = true;
+		} catch (\Exception $e) {
+			$statusCode = 500;
+			$respData->message = $e->getMessage();
+			$respData->should_refresh_page = false;
+		}
+
+		$response = new \WP_REST_Response($respData);
+		$response->set_status($statusCode);
+
+		return $response;
 	}
 }

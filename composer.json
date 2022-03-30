@@ -1,26 +1,29 @@
 {
-    "name": "rownd/wp-auth",
-    "description": "Rownd authentication plugin for WordPress",
-    "type": "wordpress-plugin",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Rownd\\WordPress\\": "src"
-        }
-    },
-    "authors": [
-        {
-            "name": "Rownd, Inc.",
-            "email": "hello@rownd.io"
-        }
-    ],
-    "require": {
-        "composer/installers": "^2.1",
-        "web-token/jwt-easy": "^2.2"
-    },
-    "config": {
-        "allow-plugins": {
-            "composer/installers": true
-        }
+  "name": "rownd/wp-auth",
+  "description": "Rownd authentication plugin for WordPress",
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Rownd\\WordPress\\": "src"
     }
+  },
+  "authors": [
+    {
+      "name": "Rownd, Inc.",
+      "email": "hello@rownd.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.2.0",
+    "composer/installers": "^2.1",
+    "web-token/jwt-easy": "^2.2",
+    "guzzlehttp/guzzle": "^7.0",
+    "web-token/jwt-signature-algorithm-eddsa": "2"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  }
 }

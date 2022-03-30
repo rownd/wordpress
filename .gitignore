@@ -1,3 +1,4 @@
+# Ignore these files/directories
 .DS_Store
 phpcs.xml
 phpunit.xml
@@ -7,5 +8,7 @@ node_modules/
 *.sql
 *.tar.gz
 *.zip
-vendor/
+vendor/*
+
+# But don't ignore these exceptions
 !vendor/autoload.php

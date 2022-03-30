@@ -27,6 +27,11 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 			<input type='password' id='rownd-app-id-field' name='rownd_settings[app_secret]' value='<?php echo $options['app_secret']; ?>' />
 		</div>
 
+		<div class="rownd-field-wrapper">
+			<label><?php _e('API URL:', 'rownd'); ?></label>
+			<input type='text' id='rownd-api-url-field' name='rownd_settings[api_url]' value='<?php echo $options['api_url']; ?>' />
+		</div>
+
 		<div class="rownd-form-footer">
 			<?php wp_nonce_field('rownd_nonce_save_settings', 'rownd_settings_action'); ?>
 			<button type="submit" name="rownd_save_settings" class="button button-primary"><?php _e('Save settings', 'rownd'); ?></button>
