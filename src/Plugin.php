@@ -95,6 +95,9 @@ class Plugin
 			$tokenHandler = new lib\TokenHandler($data);
 			$decodedToken = $tokenHandler->validateToken($token);
 
+			// Ensure the WP user session is set
+
+
 			$respData->message = 'Authentication successful';
 			$respData->should_refresh_page = true;
 		} catch (\Exception $e) {

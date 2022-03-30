@@ -26,14 +26,6 @@ class TokenHandler
 		$this->getJWKSet();
 	}
 
-	function findUser($rownd_id)
-	{
-		get_users(array(
-			'meta_key' => 'rownd_id',
-			'meta_value' => $rownd_id
-		));
-	}
-
 	function getJWKSet() {
 		$oidcResp = $this->httpClient->get('/hub/auth/.well-known/oauth-authorization-server');
 		$oidcConfig = json_decode($oidcResp->getBody(), false);
