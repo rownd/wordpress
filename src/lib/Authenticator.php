@@ -6,40 +6,89 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 class Authenticator
 {
-
 	function signInUser($decodedRowndToken)
 	{
-		$wpUserDetails = new \stdClass();
+		$rowndUserId = $decodedRowndToken->claims->get('https://auth.rownd.io/app_user_id');
+
+		$rowndClient = RowndClient::getInstance();
+		$rowndUser = $rowndClient->getRowndUser($rowndUserId);
 
 		// Configure user details
-		$row = $this->findUser($decodedRowndToken);
-		$options = get_option(ROWND_PLUGIN_SETTINGS);
+		$row = $this->findUser($rowndUser);
+		// $options = get_option(ROWND_PLUGIN_SETTINGS);
 
 		if (!$row) {
-			$row = $this->createUser($wpUserDetails);
-
-			// update_user_meta($row->ID, 'email', $result->email);
-			// update_user_meta($row->ID, 'first_name', $result->first_name);
-			// update_user_meta($row->ID, 'last_name', $result->last_name);
-			// update_user_meta($row->ID, 'deuid', $result->deuid);
-			// update_user_meta($row->ID, 'deutype', $result->deutype);
-			// update_user_meta($row->ID, 'deuimage', $result->deuimage);
-			// update_user_meta($row->ID, 'description', $result->about);
-			// update_user_meta($row->ID, 'sex', $result->gender);
-			// wp_update_user(array('ID' => $row->ID, 'display_name' => $result->first_name . ' ' . $result->last_name, 'role' => $options['apsl_user_role'], 'user_url' => $result->url));
+			$row = $this->createUser($rowndUser);
 		}
-		$this->loginUser($row->ID);
+
+		$userId = $row->ID;
+
+		// Sign-in the user
+		if (!isset($secure_cookie) && is_ssl() && force_ssl_login() && !force_ssl_admin()) {
+			$secure_cookie = false;
+		}
+		if (isset($_POST['testcookie']) && empty($_COOKIE[TEST_COOKIE])) {
+			throw new WP_Error('test_cookie', __("<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress."));
+		}
+
+		$user = wp_signon('', isset($secure_cookie));
+
+		if (!$this->set_cookies($userId)) {
+			return false;
+		}
 	}
 
-	function findUser($rownd_id)
+	// Find user by Rownd ID first, otherwise try email
+	function findUser($rowndUser)
 	{
-		get_users(array(
+		$users = get_users(array(
 			'meta_key' => 'rownd_id',
-			'meta_value' => $rownd_id
+			'meta_value' => $rowndUser->data->user_id
 		));
+
+		if (count($users) > 0) {
+			return $users[0];
+		}
+
+		return get_user_by('email', $rowndUser->data->email);
 	}
 
-	function createUser() {
+	function createUser($rowndUser)
+	{
+		$rowndUserData = $rowndUser->data;
 
+		$random_password = wp_generate_password(12, false);
+		$userId = wp_create_user($rowndUser->data->email, $random_password, $rowndUserData->email);
+
+		update_user_meta($userId, 'email', $rowndUserData->email);
+		update_user_meta($userId, 'first_name', $rowndUserData->first_name);
+		update_user_meta($userId, 'last_name', $rowndUserData->last_name);
+		update_user_meta($userId, 'rownd_id', $rowndUserData->user_id);
+		wp_update_user(
+			array(
+				'ID' => $userId,
+				'display_name' => $rowndUserData->first_name . ' ' . $rowndUserData->last_name,
+				'user_url' => $rowndUser->url
+			)
+		);
+
+		do_action('rownd_create_user', $userId); // hookable function to perform additional actions on user creation
+		return $userId;
+	}
+
+	function set_cookies($user_id = 0, $remember = true)
+	{
+		if (!function_exists('wp_set_auth_cookie')) {
+			return false;
+		}
+
+		if (!$user_id) {
+			return false;
+		}
+
+		wp_clear_auth_cookie();
+		wp_set_auth_cookie($user_id, $remember);
+		wp_set_current_user($user_id);
+		return true;
 	}
 }

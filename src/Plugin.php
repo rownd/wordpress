@@ -15,20 +15,10 @@ class Plugin
 		add_action('init', array($this, 'plugin_text_domain')); //load the plugin text domain
 		add_action('rest_api_init', array($this, 'register_plugin_api'));
 		add_action('admin_menu', array($this, 'add_rownd_menu')); //register the plugin menu in backend
-		// add_action('admin_enqueue_scripts', array($this, 'register_admin_assets')); //registers all the assets required for wp-admin
+		add_action('admin_enqueue_scripts', array($this, 'register_admin_assets')); //registers all the assets required for wp-admin
 		add_action('wp_enqueue_scripts', array($this, 'register_frontend_assets')); // registers all the assets required for the frontend
 		add_action('admin_post_rownd_save_settings', array($this, 'save_settings')); //save settings of a plugin
-
-		// add_action('init', array($this, 'handle_authenticate')); //check for the social logins
-
 	}
-
-	//starts the session with the call of init hook
-	// function session_init() {
-	//     if( !session_id() && !headers_sent() ) {
-	//         session_start();
-	//     }
-	// }
 
 	function plugin_activation()
 	{
@@ -79,10 +69,14 @@ class Plugin
 		wp_enqueue_script('rownd-hub-js', ROWND_PLUGIN_JS_DIR . '/hub.js', ROWND_PLUGIN_VERSION);
 		wp_localize_script('rownd-hub-js', 'rownd_config_object', array(
 			'app_key' => $this->rownd_settings['app_key'],
+			'nonce' => wp_create_nonce( 'wp_rest' )
 		));
 		//register frontend css
 		// wp_enqueue_style( 'fontawsome-css', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css', '', APSL_VERSION );
-		// wp_enqueue_style( 'apsl-frontend-css', APSL_CSS_DIR . '/frontend.css', '', APSL_VERSION );
+	}
+
+	function register_admin_assets() {
+		wp_enqueue_style( 'rowwnd-admin-css', ROWND_PLUGIN_CSS_DIR . '/admin.css', '', ROWND_PLUGIN_VERSION );
 	}
 
 	function handle_authenticate($data)
@@ -91,15 +85,20 @@ class Plugin
 		$statusCode = 200;
 		$token = $data['access_token'];
 
+		$respData->should_refresh_page = false;
+
 		try {
-			$tokenHandler = new lib\TokenHandler($data);
-			$decodedToken = $tokenHandler->validateToken($token);
+			$rowndClient = lib\RowndClient::getInstance();
+			$decodedToken = $rowndClient->validateToken($token);
 
 			// Ensure the WP user session is set
-
+			if (!is_user_logged_in()) {
+				$respData->should_refresh_page = true;
+				$authenticator = new lib\Authenticator();
+				$authenticator->signInUser($decodedToken);
+			}
 
 			$respData->message = 'Authentication successful';
-			$respData->should_refresh_page = true;
 		} catch (\Exception $e) {
 			$statusCode = 500;
 			$respData->message = $e->getMessage();

@@ -19,7 +19,10 @@
 
 _rphConfig.push(['setPostAuthenticationApi', {
 	method: 'post',
-	url: '/wp-json/rownd/v1/auth'
+	url: '/wp-json/rownd/v1/auth',
+	extra_headers: {
+		'x-wp-nonce': rownd_config_object.nonce
+	}
 }]);
 
 if (rownd_config_object?.app_key) {
