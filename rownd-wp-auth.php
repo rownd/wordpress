@@ -3,14 +3,16 @@
 /**
  * Plugin Name:     Rownd Accounts and Authentication
  * Plugin URI:      https://github.com/rownd/wordpress
- * Description:     Simplify and streamline your WordPress registration and sign-in process using Rownd.
+ * Description:     Instantly turn visitors into users with Rownd's radically simple, user-centric authentication.
  * Author:          Rownd, Inc.
  * Author URI:      https://rownd.io
  * Text Domain:     rownd-wp-auth
  * Domain Path:     /languages
  * Version:         0.1.0
+ * License:		    Apache 2.0
+ * License URI:     http://www.apache.org/licenses/LICENSE-2.0
  *
- * @package         Rownd_Wp_Auth
+ * @package         Rownd
  */
 
 // Your code starts here.
