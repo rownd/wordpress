@@ -5,8 +5,8 @@ Requires at least: 4.5
 Tested up to: 5.9.2
 Requires PHP: 7.2
 Stable tag: 1.0.0
-License: MIT
-License URI: https://opensource.org/licenses/MIT
+License: Apache 2.0
+License URI: http://www.apache.org/licenses/LICENSE-2.0
 
 Instantly turn visitors into users with Rownd's radically simple, user-centric authentication.
 
