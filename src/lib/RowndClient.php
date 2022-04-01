@@ -44,18 +44,33 @@ class RowndClient
 	}
 
 	function getAppConfig() {
+		if ( false !== ( $appConfig = get_site_transient( 'rownd_app_config' ) ) ) {
+			$this->appConfig = $appConfig;
+			return $this->appConfig;
+		}
+
 		$appConfigResp = $this->httpClient->get('/hub/app-config');
 		$this->appConfig = json_decode($appConfigResp->getBody(), false);
+
+		set_site_transient( 'rownd_app_config', $this->appConfig, HOUR_IN_SECONDS );
+
 		return $this->appConfig;
 	}
 
 	function getJWKSet() {
+		if ( false !== ( $jwkSet = get_transient( 'rownd_jwkset' ) ) ) {
+			$this->jwkSet = $jwkSet;
+			return $this->jwkSet;
+		}
+
 		$oidcResp = $this->httpClient->get('/hub/auth/.well-known/oauth-authorization-server');
 		$oidcConfig = json_decode($oidcResp->getBody(), false);
 
 		$jwksResp = $this->httpClient->get($oidcConfig->jwks_uri);
 
 		$this->jwkSet = JWKSet::createFromJson($jwksResp->getBody());
+
+		set_transient( 'rownd_jwkset', $this->jwkSet, DAY_IN_SECONDS );
 
 		return $this->jwkSet;
 	}
@@ -76,10 +91,17 @@ class RowndClient
 	}
 
 	function getRowndUser($rowndUserId) {
+		if ( false !== ( $user = wp_cache_get( $rowndUserId, 'rownd_users' ) ) ) {
+			return $user;
+		}
+
 		$userUrl = '/applications/' . $this->appConfig->app->id . '/users/' . $rowndUserId;
 		$resp = $this->httpClient->get($userUrl . '/data');
 		$user = json_decode($resp->getBody());
 		$user->url = $user->url ?: $this->settings['api_url'] . $userUrl;
+
+		wp_cache_add($rowndUserId, $user, 'rownd_users', 0.2 * MINUTE_IN_SECONDS);
+
 		return $user;
 	}
 }

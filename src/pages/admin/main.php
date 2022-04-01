@@ -41,7 +41,7 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 	<div class="rownd-info-area">
 		<div class="logo-wrap">
 			<a class="rownd-image-link" href="https://app.rownd.io" target="_blank" rel="noreferrer">
-				<img src="https://static.rownd.io/images/rownd-logo-purple-graded.svg" alt="<?php esc_attr_e('Rownd', 'rownd'); ?>" />
+				<img src="<?php echo ROWND_PLUGIN_IMAGE_DIR; ?>/rownd-logo-purple-graded.svg" alt="<?php esc_attr_e('Rownd', 'rownd'); ?>" />
 			</a>
 		</div>
 		<div class="logo-content">

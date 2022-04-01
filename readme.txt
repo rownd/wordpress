@@ -1,6 +1,6 @@
 === Rownd — Instant user accounts and authentication ===
-Contributors: mhamann, Rownd Inc.
-Tags: users, authentication, accounts, login, social login, google, social connect, social network login, register, login with, signin, oauth, authorize
+Contributors: rownd, mhamann
+Tags: users, authentication, accounts, profile, login, social login, register, login with, signin, oauth, authorize
 Requires at least: 4.5
 Tested up to: 5.9.2
 Requires PHP: 7.2
@@ -46,8 +46,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Screenshots ==
 
-1. Rownd allows visitors to sign-in via our Hub component, which you can also trigger from any HTML page element.
-2. Once authenticated, users can manage any personal data that they've shared with you.
+1. Rownd allows visitors to sign-in simply via UX components, which you can also trigger from any HTML page element.
+2. Once authenticated, users can manage their account from any page on the site.
+3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
 
@@ -57,4 +58,4 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 == Upgrade Notice ==
 
 = 1.0 =
-Upgrade notices describe the reason a user should upgrade.  No more than 300 characters.
+Install our initial release!
