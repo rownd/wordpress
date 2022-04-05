@@ -63,7 +63,7 @@ function rownd_on_activation()
 		return;
 	}
 
-	$plugin = isset($_REQUEST['plugin']) ? $_REQUEST['plugin'] : '';
+	$plugin = isset($_REQUEST['plugin']) ? sanitize_key($_REQUEST['plugin']) : '';
 	check_admin_referer("activate-plugin_{$plugin}");
 
 	if (!get_option(ROWND_PLUGIN_SETTINGS)) {

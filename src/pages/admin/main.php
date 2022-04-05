@@ -14,12 +14,12 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 				<div class="rownd-field-group-description">Enter your Rownd app keys obtained from the <a href="https://app.rownd.io" target="_blank" rel="noreferrer">Rownd dashboard.</a></div>
 				<div class='rownd-field-wrapper'>
 					<label><?php _e('App key:', 'rownd'); ?></label>
-					<input type='text' id='rownd-app-id-field' name='rownd_settings[app_key]' value='<?php echo $options['app_key']; ?>' />
+					<input type='text' id='rownd-app-id-field' name='rownd_settings[app_key]' value='<?php echo esc_html($options['app_key']); ?>' />
 				</div>
 
 				<div class='rownd-field-wrapper'>
 					<label><?php _e('App secret:', 'rownd'); ?></label>
-					<input type='password' id='rownd-app-id-field' name='rownd_settings[app_secret]' value='<?php echo $options['app_secret']; ?>' />
+					<input type='password' id='rownd-app-id-field' name='rownd_settings[app_secret]' value='<?php echo esc_html($options['app_secret']); ?>' />
 				</div>
 			</div>
 
@@ -28,7 +28,7 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 				<div class="rownd-field-group-description">Only change these values if instructed by a Rownd support engineer.</div>
 				<div class="rownd-field-wrapper">
 					<label><?php _e('API URL:', 'rownd'); ?></label>
-					<input type='text' id='rownd-api-url-field' name='rownd_settings[api_url]' value='<?php echo $options['api_url']; ?>' />
+					<input type='text' id='rownd-api-url-field' name='rownd_settings[api_url]' value='<?php echo esc_url($options['api_url']); ?>' />
 				</div>
 			</div>
 
