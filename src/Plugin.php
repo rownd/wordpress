@@ -16,7 +16,7 @@ class Plugin
 		add_action('admin_enqueue_scripts', array($this, 'register_admin_assets')); //registers all the assets required for wp-admin
 		add_action('wp_enqueue_scripts', array($this, 'register_frontend_assets')); // registers all the assets required for the frontend
 		add_action('admin_post_rownd_save_settings', array($this, 'save_settings')); //save settings of a plugin
-		add_filter('plugin_action_links_rownd/index.php', array($this, 'plugin_action_links'), 10, 2);
+		add_filter('plugin_action_links_rownd-accounts-and-authentication/index.php', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 4);
 	}
 
@@ -79,10 +79,17 @@ class Plugin
 	{
 		//register frontend scripts
 		wp_enqueue_script('rownd-hub-js', ROWND_PLUGIN_JS_DIR . '/hub.js', ROWND_PLUGIN_VERSION);
-		wp_localize_script('rownd-hub-js', 'rownd_config_object', array(
+
+		$scriptVars = array(
 			'app_key' => $this->rownd_settings['app_key'],
 			'nonce' => wp_create_nonce('wp_rest')
-		));
+		);
+
+		if (!empty($this->rownd_settings['root_origin'])) {
+			$scriptVars['root_origin'] = $this->rownd_settings['root_origin'];
+		}
+
+		wp_localize_script('rownd-hub-js', 'rownd_config_object', $scriptVars);
 	}
 
 	function register_admin_assets()

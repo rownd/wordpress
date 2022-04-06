@@ -14,12 +14,21 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 				<div class="rownd-field-group-description">Enter your Rownd app keys obtained from the <a href="https://app.rownd.io" target="_blank" rel="noreferrer">Rownd dashboard.</a></div>
 				<div class='rownd-field-wrapper'>
 					<label><?php _e('App key:', 'rownd'); ?></label>
-					<input type='text' id='rownd-app-id-field' name='rownd_settings[app_key]' value='<?php echo esc_html($options['app_key']); ?>' />
+					<input type='text' id='rownd-app-key-field' name='rownd_settings[app_key]' value='<?php echo esc_html($options['app_key']); ?>' />
 				</div>
 
 				<div class='rownd-field-wrapper'>
 					<label><?php _e('App secret:', 'rownd'); ?></label>
-					<input type='password' id='rownd-app-id-field' name='rownd_settings[app_secret]' value='<?php echo esc_html($options['app_secret']); ?>' />
+					<input type='password' id='rownd-app-secret-field' name='rownd_settings[app_secret]' value='<?php echo esc_html($options['app_secret']); ?>' />
+				</div>
+			</div>
+
+			<div class="rownd-field-group">
+				<h2>Optional settings</h2>
+				<div class="rownd-field-group-description">These are optional fields that are only needed in certain circumstances.</div>
+				<div class='rownd-field-wrapper'>
+					<label><?php _e('Root origin:', 'rownd'); ?></label>
+					<input type='text' id='rownd-root-origin-field' name='rownd_settings[root_origin]' value='<?php echo esc_html($options['root_origin'] ?? ''); ?>' />
 				</div>
 			</div>
 

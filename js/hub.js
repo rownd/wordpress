@@ -1,3 +1,8 @@
+function rowndSetConfigVar(name, value) {
+	if (value) {
+		_rphConfig.push([name, value]);
+	}
+}
 
 (function () {
 	var _rphConfig = (window._rphConfig =
@@ -25,6 +30,5 @@ _rphConfig.push(['setPostAuthenticationApi', {
 	}
 }]);
 
-if (rownd_config_object?.app_key) {
-	_rphConfig.push(['setAppKey', rownd_config_object.app_key]);
-}
+rowndSetConfigVar('setAppKey', rownd_config_object?.app_key);
+rowndSetConfigVar('setRootOrigin', rownd_config_object?.root_origin);
