@@ -27,8 +27,16 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 				<h2>Optional settings</h2>
 				<div class="rownd-field-group-description">These are optional fields that are only needed in certain circumstances.</div>
 				<div class='rownd-field-wrapper'>
+					<label><?php _e('Create/update users in WordPress when they sign in with Rownd:', 'rownd'); ?></label>
+					<select id='rownd-root-origin-field' name='rownd_settings[add_users_to_wordpress]'>
+						<option value='1' <?php echo ($options['add_users_to_wordpress'] ?? '1') == 1 ? 'selected' : ''; ?>><?php _e('Yes', 'rownd'); ?></option>
+						<option value='0' <?php echo ($options['add_users_to_wordpress'] ?? '1') == 0 ? 'selected' : ''; ?>><?php _e('No', 'rownd'); ?></option>
+					</select>
+				</div>
+				<div class='rownd-field-wrapper'>
 					<label><?php _e('Root origin:', 'rownd'); ?></label>
-					<input type='text' id='rownd-root-origin-field' name='rownd_settings[root_origin]' value='<?php echo esc_html($options['root_origin'] ?? ''); ?>' />
+					<input type='text' id='rownd-root-origin-field' name='rownd_settings[root_origin]' value='<?php echo esc_html($options['root_origin'] ?? ''); ?>' placeholder="https://mysite.com" />
+					<p class="rownd-field-help">Use this setting when adding Rownd to multiple subdomains (e.g., <code>company.com</code> and <code>blog.company.com</code>)</p>
 				</div>
 			</div>
 

@@ -51,8 +51,23 @@
 	font-weight: bold;
 }
 
-.rownd-settings .rownd-field-wrapper input {
+.rownd-settings .rownd-field-wrapper input,
+.rownd-settings .rownd-field-wrapper select {
 	min-width: 350px;
 	margin-bottom: 5px;
 	font-size: 0.9em;
+}
+
+.rownd-settings .rownd-field-wrapper input::placeholder {
+	color: #bbb;
+	font-style: italic;
+}
+
+.rownd-settings .rownd-field-wrapper .rownd-field-help {
+	font-size: 0.7em;
+	margin-top: 0;
+}
+
+.rownd-settings .rownd-field-wrapper .rownd-field-help code {
+	font-size: 1em;
 }

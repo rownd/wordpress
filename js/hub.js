@@ -22,13 +22,15 @@ function rowndSetConfigVar(name, value) {
 	}
 })();
 
-_rphConfig.push(['setPostAuthenticationApi', {
-	method: 'post',
-	url: '/wp-json/rownd/v1/auth',
-	extra_headers: {
-		'x-wp-nonce': rownd_config_object.nonce
-	}
-}]);
+if (rownd_config_object?.start_wp_session === 'on') {
+	_rphConfig.push(['setPostAuthenticationApi', {
+		method: 'post',
+		url: '/wp-json/rownd/v1/auth',
+		extra_headers: {
+			'x-wp-nonce': rownd_config_object.nonce
+		}
+	}]);
+}
 
 rowndSetConfigVar('setAppKey', rownd_config_object?.app_key);
 rowndSetConfigVar('setRootOrigin', rownd_config_object?.root_origin);

@@ -82,11 +82,17 @@ class Plugin
 
 		$scriptVars = array(
 			'app_key' => $this->rownd_settings['app_key'],
-			'nonce' => wp_create_nonce('wp_rest')
+			'nonce' => wp_create_nonce('wp_rest'),
+			'start_wp_session' => 'on',
 		);
 
 		if (!empty($this->rownd_settings['root_origin'])) {
 			$scriptVars['root_origin'] = $this->rownd_settings['root_origin'];
+		}
+
+		// Disables starting a WP session / creating WP users if the option is explicitly disabled
+		if (($this->rownd_settings['add_users_to_wordpress'] ?? '1') == '0') {
+			$scriptVars['start_wp_session'] = 'off';
 		}
 
 		wp_localize_script('rownd-hub-js', 'rownd_config_object', $scriptVars);
