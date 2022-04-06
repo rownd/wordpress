@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, login, social login, register, l
 Requires at least: 4.5
 Tested up to: 5.9.2
 Requires PHP: 7.2
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -51,11 +51,17 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.1.0 =
+* Feature: Admins may set root origin for use across multiple sites
+* Feature: Admins may disable management of WordPress users when someone authenticates (defaults to enabled).
 
-= 1.0 =
+= 1.0.0 =
 * Initial release
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 1.1.0 =
+Upgrade to enable finer control of Rownd's WordPress integration.
+
+= 1.0.0 =
 Install our initial release!
