@@ -78,7 +78,7 @@ class Plugin
 	function register_frontend_assets()
 	{
 		//register frontend scripts
-		wp_enqueue_script('rownd-hub-js', ROWND_PLUGIN_JS_DIR . '/hub.js', ROWND_PLUGIN_VERSION);
+		wp_enqueue_script('rownd-hub-js', ROWND_PLUGIN_JS_DIR . '/hub.js', [], ROWND_PLUGIN_VERSION, false);
 
 		$scriptVars = array(
 			'app_key' => $this->rownd_settings['app_key'],
