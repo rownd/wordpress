@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, auth, login, social login, regis
 Requires at least: 4.5
 Tested up to: 5.9.2
 Requires PHP: 7.2
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -51,6 +51,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.1.2 =
+* Fix: Asset caching was not using the plugin version as the cache key
+
 = 1.1.1 =
 * Fix: Changes to API endpoint settings were not honored
 
@@ -62,6 +65,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.1.2=
+Upgrade for critical bug fixes
 
 = 1.1.0 =
 Upgrade to enable finer control of Rownd's WordPress integration.
