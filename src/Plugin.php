@@ -82,6 +82,8 @@ class Plugin
 
 		$scriptVars = array(
 			'app_key' => $this->rownd_settings['app_key'],
+			'api_url' => $this->rownd_settings['api_url'] ?? 'https://api.rownd.io',
+			'hub_base_url' => $this->rownd_settings['hub_base_url'] ?? 'https://hub.rownd.io',
 			'nonce' => wp_create_nonce('wp_rest'),
 			'start_wp_session' => 'on',
 		);

@@ -47,6 +47,11 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 					<label><?php _e('API URL:', 'rownd'); ?></label>
 					<input type='text' id='rownd-api-url-field' name='rownd_settings[api_url]' value='<?php echo esc_url($options['api_url']); ?>' />
 				</div>
+
+				<div class="rownd-field-wrapper">
+					<label><?php _e('Hub base URL:', 'rownd'); ?></label>
+					<input type='text' id='rownd-api-url-field' name='rownd_settings[hub_base_url]' value='<?php echo esc_url($options['hub_base_url'] ?? 'https://hub.rownd.io'); ?>' />
+				</div>
 			</div>
 
 			<div class="rownd-form-footer">

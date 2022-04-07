@@ -6,5 +6,6 @@ $rownd_settings['app_key'] = '';
 $rownd_settings['app_secret'] = '';
 
 $rownd_settings['api_url'] = 'https://api.rownd.io';
+$rownd_settings['hub_base_url'] = 'https://hub.rownd.io';
 
 update_option( ROWND_PLUGIN_SETTINGS, $rownd_settings );

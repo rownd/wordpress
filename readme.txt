@@ -1,10 +1,10 @@
 === Rownd — Instant user accounts and authentication ===
 Contributors: rownd, mhamann
-Tags: users, authentication, accounts, profile, login, social login, register, login with, signin, oauth, authorize
+Tags: users, authentication, accounts, profile, auth, login, social login, register, login with, signin, oauth, authorize
 Requires at least: 4.5
 Tested up to: 5.9.2
 Requires PHP: 7.2
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -51,6 +51,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.1.1 =
+* Fix: Changes to API endpoint settings were not honored
+
 = 1.1.0 =
 * Feature: Admins may set root origin for use across multiple sites
 * Feature: Admins may disable management of WordPress users when someone authenticates (defaults to enabled).
