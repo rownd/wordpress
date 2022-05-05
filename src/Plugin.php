@@ -16,8 +16,15 @@ class Plugin
 		add_action('admin_enqueue_scripts', array($this, 'register_admin_assets')); //registers all the assets required for wp-admin
 		add_action('wp_enqueue_scripts', array($this, 'register_frontend_assets')); // registers all the assets required for the frontend
 		add_action('admin_post_rownd_save_settings', array($this, 'save_settings')); //save settings of a plugin
+		add_action('profile_update', array($this, 'update_user_profile')); //update user profile
+
 		add_filter('plugin_action_links_rownd-accounts-and-authentication/index.php', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 4);
+		add_filter('determine_current_user', array($this, 'determine_current_user'));
+
+		if (rownd_is_plugin_active('woocommerce/woocommerce.php')) {
+			$this->setup_woocommerce();
+		}
 	}
 
 	function register_plugin_api()
@@ -25,6 +32,15 @@ class Plugin
 		register_rest_route('rownd/v1', '/auth', array(
 			'methods' => 'POST',
 			'callback' => array($this, 'handle_authenticate'),
+			'permission_callback' => '__return_true',
+		));
+
+		register_rest_route('rownd/v1', '/auth/signout', array(
+			'methods' => 'POST',
+			'callback' => array($this, 'handle_signout'),
+			'permission_callback' => function () {
+				return is_user_logged_in();
+			  }
 		));
 	}
 
@@ -56,6 +72,25 @@ class Plugin
 		}
 
 		return $links_array;
+	}
+
+	function setup_woocommerce() {
+		// WooCommerce integration
+		if (($this->rownd_settings['is_woocommerce_integration_enabled'] ?? '0') == 0) {
+			return;
+		}
+
+		if ($this->rownd_settings['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout' == 'before_checkout') {
+			add_action('woocommerce_before_checkout_form', array($this, 'trigger_rownd_signin'), 10, 3);
+		} else {
+			add_action('woocommerce_after_order_details', array($this, 'trigger_rownd_signin'), 10, 3);
+		}
+
+		// Rownd creates WordPress users, not WooCommerce customers, so we want to run this for everyone.
+		add_action( 'user_register', array($this, 'link_wc_orders_at_registration' ));
+
+		// Replace WooCommerce login pages
+		add_filter( 'wc_get_template', array($this, 'replace_woocommerce_login_page'), 1, 2 );
 	}
 
 	// admin page
@@ -122,18 +157,115 @@ class Plugin
 				$respData->should_refresh_page = true;
 				$authenticator = new lib\Authenticator();
 				$authenticator->signInUser($decodedToken);
+				$respData->message = 'Authentication successful';
+			} else {
+				$respData->message = 'Already authenticated';
 			}
 
-			$respData->message = 'Authentication successful';
 		} catch (\Exception $e) {
 			$statusCode = 500;
 			$respData->message = $e->getMessage();
 			$respData->should_refresh_page = false;
 		}
 
+		try {
+			if (rownd_is_plugin_active('woocommerce/woocommerce.php') && ($this->rownd_settings['is_woocommerce_integration_enabled'] ?? '0') == 1 && $respData->should_refresh_page == true) {
+				$this->link_wc_orders_at_registration(get_current_user_id());
+			}
+		} catch (\Exception $e) {
+			// No-op -- just log
+			rownd_write_log($e->getMessage());
+		}
+
 		$response = new \WP_REST_Response($respData);
 		$response->set_status($statusCode);
 
 		return $response;
+	}
+
+	function handle_signout() {
+		wp_logout();
+		$respData = new \stdClass();
+		$respData->message = 'Sign out successful';
+		$respData->return_to = $this->rownd_settings['redirect_to_after_sign_out'] ?? '/';
+
+		$response = new \WP_REST_Response($respData);
+		$response->set_status(200);
+
+		return $response;
+	}
+
+	function determine_current_user($user_id) {
+		/**
+		 * This hook only should run on the REST API requests to determine
+		 * if the user in the Token (if any) is valid, for any other
+		 * normal call ex. wp-admin/.* return the user.
+		 */
+		$this->rest_api_slug = get_option( 'permalink_structure' ) ? rest_get_url_prefix() : '?rest_route=/';
+
+		// Make sure this is a REST API request and that it's not to our post-authentication endpoint for browser access
+		$valid_api_uri = stripos( $_SERVER['REQUEST_URI'], $this->rest_api_slug ) && !stripos( $_SERVER['REQUEST_URI'], $this->rest_api_slug . '/rownd/v1/auth');
+
+		if ( ! $valid_api_uri ) {
+			return $user_id;
+		}
+
+		$token = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? $_SERVER['HTTP_AUTHORIZATION'] : false;
+
+		// If no token, this won't be something Rownd can handle
+		if (!$token) {
+			return $user_id;
+		}
+
+		$token = preg_replace('/^Bearer\s/i', '', $token);
+
+		try {
+			$rowndClient = lib\RowndClient::getInstance();
+			$decodedToken = $rowndClient->validateToken($token);
+
+			$authenticator = new lib\Authenticator();
+			$user_id = $authenticator->authenticateUser($decodedToken);
+
+			return $user_id;
+		} catch (\Exception $e) {
+			error_log('Failed to authenticate Rownd token: ' . $e->getMessage() . '\n' . $e->getTraceAsString());
+			return $user_id;
+		}
+	}
+
+	function trigger_rownd_signin() {
+		echo '<div data-rownd-require-sign-in></div>';
+	}
+
+	function replace_woocommerce_login_page($template, $template_path) {
+		// var_dump($template_path);
+		if ($template_path != 'myaccount/form-login.php') {
+			return $template;
+		}
+
+		$new_path = plugin_dir_path( __FILE__ ) . 'templates/woocommerce-login.php';
+
+		return $new_path;
+	}
+
+	function update_user_profile($user_id, $old_user_data, $userdata) {
+		$rowndUserId = get_user_meta($user_id, 'rownd_id', true);
+
+		// If we don't know the Rownd user's ID, then we can't update anything
+		if (!$rowndUserId) {
+			return;
+		}
+
+		$filteredUserData = array();
+		$filteredUserData['first_name'] = $userdata["first_name"];
+		$filteredUserData['last_name'] = $userdata["last_name"];
+		$filteredUserData['email'] = $userdata["user_email"];
+
+		$rowndClient = lib\RowndClient::getInstance();
+		$rowndClient->createOrUpdateRowndUser($rowndUserId, $filteredUserData);
+	}
+
+	function link_wc_orders_at_registration($user_id) {
+		wc_update_new_customer_past_orders( $user_id );
 	}
 }

@@ -1,10 +1,10 @@
 === Rownd — Instant user accounts and authentication ===
 Contributors: rownd, mhamann
-Tags: users, authentication, accounts, profile, auth, login, social login, register, login with, signin, oauth, authorize
+Tags: users, authentication, accounts, profile, woocommerce, auth, login, social login, register, signin, oauth, authorize
 Requires at least: 4.5
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Requires PHP: 7.2
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -21,9 +21,10 @@ When you install the Rownd plugin for WordPress, you'll bring our powerfully sim
 your website, blog, or ecommerce site.
 
 Rownd integrates with the existing WordPress user management system, which means we're compatible with WooCommerce and many other
-WordPress addons!
+WordPress addons! We'll also detect whether you have WooCommerce installed and provide options to customize your customer experience
+during the checkout process.
 
-Whether you're accepting user signups already or want to start, Rownd makes it ultra-simple to get visitors and customers up and running quickly.
+Whether you're accepting user signups already or want to start, Rownd makes it super-simple to get visitors and customers up and running quickly.
 Easily trigger our sign-in dialog by setting some HTML data attributes in your code or writing some simple Javascript and we'll handle getting
 your users verified and signed in using our unique, passwordless approach.
 
@@ -51,6 +52,11 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.2.0 =
+* Feature: Require sign-in during or after the WooCommerce checkout process
+* Feature: Replace WooCommerce authentication functions
+* Fix: Page refresh loop due to certain circumstances that prevented session initialization
+
 = 1.1.2 =
 * Fix: Asset caching was not using the plugin version as the cache key
 
@@ -65,6 +71,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Upgrade for critical bug fixes and to enable deeper integration with WooCommerce!
 
 = 1.1.2=
 Upgrade for critical bug fixes

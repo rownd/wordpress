@@ -76,6 +76,15 @@ class RowndClient
 	}
 
 	function validateToken($token) {
+		// Check if this token has been previously validated and is not expired
+		$tokenHash = wp_hash($token);
+		$transientName = 'rownd_token_' . $tokenHash;
+		$existingJwt = get_transient($transientName);
+
+		if ($existingJwt !== false) {
+			return $existingJwt;
+		}
+
 		if (!$this->jwkSet) {
 			$this->getJWKSet();
 		}
@@ -86,6 +95,9 @@ class RowndClient
 			->iat()
 			->keyset($this->jwkSet)
 			->run();
+
+		// Cache the token as its hash until it expires
+		set_transient($transientName, $jwt, $jwt->claims->exp() - time());
 
 		return $jwt;
 	}
@@ -98,10 +110,14 @@ class RowndClient
 		$userUrl = '/applications/' . $this->appConfig->app->id . '/users/' . $rowndUserId;
 		$resp = $this->httpClient->get($userUrl . '/data');
 		$user = json_decode($resp->getBody());
-		$user->url = $user->url ?: $this->settings['api_url'] . $userUrl;
+		$user->url = isset($user->url) ?? $this->settings['api_url'] . $userUrl;
 
 		wp_cache_add($rowndUserId, $user, 'rownd_users', 0.2 * MINUTE_IN_SECONDS);
 
 		return $user;
+	}
+
+	function createOrUpdateRowndUser($rowndUserId, $data) {
+
 	}
 }

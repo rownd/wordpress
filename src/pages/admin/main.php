@@ -34,11 +34,34 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 					</select>
 				</div>
 				<div class='rownd-field-wrapper'>
-					<label><?php _e('Root origin:', 'rownd'); ?></label>
+					<label><?php _e('Root origin (leave blank if unsure):', 'rownd'); ?></label>
 					<input type='text' id='rownd-root-origin-field' name='rownd_settings[root_origin]' value='<?php echo esc_html($options['root_origin'] ?? ''); ?>' placeholder="https://mysite.com" />
 					<p class="rownd-field-help">Use this setting when adding Rownd to multiple subdomains (e.g., <code>company.com</code> and <code>blog.company.com</code>)</p>
 				</div>
 			</div>
+
+			<?php if (rownd_is_plugin_active('woocommerce/woocommerce.php')): ?>
+			<div class="rownd-field-group">
+				<h2>WooCommerce customizations</h2>
+				<div class="rownd-field-group-description">Since WooCommerce is installed, Rownd can help you simplify customer onboarding.</div>
+				<div class="rownd-field-wrapper">
+					<label><?php _e('Enable WooCommerce support?', 'rownd'); ?></label>
+					<select id='rownd-woo-enabled-field' name='rownd_settings[is_woocommerce_integration_enabled]'>
+						<option value='1' <?php echo ($options['is_woocommerce_integration_enabled'] ?? '0') == 1 ? 'selected' : ''; ?>><?php _e('Yes', 'rownd'); ?></option>
+						<option value='0' <?php echo ($options['is_woocommerce_integration_enabled'] ?? '0') == 0 ? 'selected' : ''; ?>><?php _e('No', 'rownd'); ?></option>
+					</select>
+					<p class="rownd-field-help">When enabled, Rownd will authenticate customers and help manage their account data.</p>
+				</div>
+
+				<div class="rownd-field-wrapper">
+					<label><?php _e('When should Rownd prompt users to sign in (if not already signed-in)?', 'rownd'); ?></label>
+					<select id='rownd-woo-enabled-field' name='rownd_settings[woocommerce_checkout_signin_prompt_location]'>
+						<option value='1' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'before_checkout' ? 'selected' : ''; ?>><?php _e('Before customer completes order', 'rownd'); ?></option>
+						<option value='0' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'after_checkout' ? 'selected' : ''; ?>><?php _e('After customer completes order', 'rownd'); ?></option>
+					</select>
+				</div>
+			</div>
+			<?php endif; ?>
 
 			<div class="rownd-field-group">
 				<h2>Advanced settings</h2>

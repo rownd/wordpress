@@ -28,7 +28,17 @@ if (rownd_config_object?.start_wp_session === 'on') {
 		url: '/wp-json/rownd/v1/auth',
 		extra_headers: {
 			'x-wp-nonce': rownd_config_object.nonce
-		}
+		},
+		timeout: rownd_config_object?.api_timeout || void 0,
+	}]);
+
+	_rphConfig.push(['setPostSignOutApi', {
+		method: 'post',
+		url: '/wp-json/rownd/v1/auth/signout',
+		extra_headers: {
+			'x-wp-nonce': rownd_config_object.nonce
+		},
+		timeout: rownd_config_object?.api_timeout || void 0,
 	}]);
 }
 

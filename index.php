@@ -8,7 +8,7 @@
  * Author URI:      https://rownd.io
  * Text Domain:     rownd
  * Domain Path:     /languages
- * Version:         1.1.2
+ * Version:         1.2.0
  * License:		    Apache 2.0
  * License URI:     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -21,7 +21,7 @@
  */
 
 if (!defined('ROWND_PLUGIN_VERSION')) {
-	define('ROWND_PLUGIN_VERSION', '1.1.2');
+	define('ROWND_PLUGIN_VERSION', '1.2.0');
 }
 
 if (!defined('ROWND_PLUGIN_IMAGE_DIR')) {
@@ -74,5 +74,28 @@ function rownd_on_activation()
 	// exit( var_dump( $_GET ) );
 }
 
+if (!function_exists('rownd_write_log')) {
+
+    function rownd_write_log($log) {
+        if (true === WP_DEBUG) {
+            if (is_array($log) || is_object($log)) {
+                error_log(print_r($log, true));
+            } else {
+                error_log($log);
+            }
+        }
+    }
+
+}
+
+if (!function_exists('rownd_is_plugin_active')) {
+	function rownd_is_plugin_active($pluginPath) {
+		if(in_array($pluginPath, apply_filters('active_plugins', get_option('active_plugins')))){
+			return true;
+		}
+
+		return false;
+	}
+}
 
 new Rownd\WordPress\Plugin();
