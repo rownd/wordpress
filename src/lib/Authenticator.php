@@ -39,7 +39,7 @@ class Authenticator
 
 		if (isset($row->errors) && count($row->errors) > 0) {
 			rownd_write_log($row->errors);
-			throw new \WP_Error('authentication_error', 'There was an error authenticating your account.');
+			throw new \Exception('authentication_error', 'There was an error authenticating your account.');
 		}
 
 		$userId = $row->ID;
