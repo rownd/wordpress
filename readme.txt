@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 5.9.3
 Requires PHP: 7.2
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -52,6 +52,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.2.1 =
+Fix: Improved error handling in certain situations
+
 = 1.2.0 =
 * Feature: Require sign-in during or after the WooCommerce checkout process
 * Feature: Replace WooCommerce authentication functions
@@ -72,7 +75,7 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Upgrade Notice ==
 
-= 1.2.0 =
+= 1.2.1 =
 Upgrade for critical bug fixes and to enable deeper integration with WooCommerce!
 
 = 1.1.2=
