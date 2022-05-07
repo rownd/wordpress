@@ -2,9 +2,9 @@
 Contributors: rownd, mhamann
 Tags: users, authentication, accounts, profile, woocommerce, auth, login, social login, register, signin, oauth, authorize
 Requires at least: 4.5
-Tested up to: 5.9.3
+Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -52,8 +52,13 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+= 1.2.2 =
+* Fix: a bug in the `profile_update` hook could cause order failures during the WooCommerce checkout process
+* Fix: the setting specifying where a user should sign in during a WooCommerce checkout flow did not reflect properly in the admin page
+* Feature: pass order email address to the Rownd sign-in dialog after WooCommerce order creation
+
 = 1.2.1 =
-Fix: Improved error handling in certain situations
+* Fix: Improved error handling in certain situations
 
 = 1.2.0 =
 * Feature: Require sign-in during or after the WooCommerce checkout process
@@ -74,6 +79,9 @@ Fix: Improved error handling in certain situations
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+Upgrade for critical bug fixes affecting Rownd integration and WooCommerce checkout.
 
 = 1.2.1 =
 Upgrade for critical bug fixes and to enable deeper integration with WooCommerce!
