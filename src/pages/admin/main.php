@@ -56,8 +56,8 @@ $options = get_option(ROWND_PLUGIN_SETTINGS);
 				<div class="rownd-field-wrapper">
 					<label><?php _e('When should Rownd prompt users to sign in (if not already signed-in)?', 'rownd'); ?></label>
 					<select id='rownd-woo-enabled-field' name='rownd_settings[woocommerce_checkout_signin_prompt_location]'>
-						<option value='1' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'before_checkout' ? 'selected' : ''; ?>><?php _e('Before customer completes order', 'rownd'); ?></option>
-						<option value='0' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'after_checkout' ? 'selected' : ''; ?>><?php _e('After customer completes order', 'rownd'); ?></option>
+						<option value='before_checkout' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'before_checkout' ? 'selected' : ''; ?>><?php _e('Before customer completes order', 'rownd'); ?></option>
+						<option value='after_checkout' <?php echo ($options['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'after_checkout' ? 'selected' : ''; ?>><?php _e('After customer completes order', 'rownd'); ?></option>
 					</select>
 				</div>
 			</div>

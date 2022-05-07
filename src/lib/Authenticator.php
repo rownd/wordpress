@@ -22,7 +22,7 @@ class Authenticator
 			$secure_cookie = false;
 		}
 		if (isset($_POST['testcookie']) && empty($_COOKIE[TEST_COOKIE])) {
-			throw new \WP_Error('test_cookie', __("<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress."));
+			throw new \Exception(__("<strong>ERROR</strong>: Cookies are blocked or not supported by your browser. You must <a href='http://www.google.com/cookies.html'>enable cookies</a> to use WordPress."));
 		}
 
 		$user = wp_signon('', isset($secure_cookie));
@@ -39,7 +39,7 @@ class Authenticator
 
 		if (isset($row->errors) && count($row->errors) > 0) {
 			rownd_write_log($row->errors);
-			throw new \Exception('authentication_error', 'There was an error authenticating your account.');
+			throw new \Exception('There was an error authenticating your account.');
 		}
 
 		$userId = $row->ID;
@@ -99,7 +99,8 @@ class Authenticator
 		$random_password = wp_generate_password(12, false);
 		$userId = null;
 		if (rownd_is_plugin_active('woocommerce/woocommerce.php') && $this->rownd_settings['is_woocommerce_integration_enabled'] ?? 'no' == 'yes') {
-			$userId = wc_create_new_customer($rowndUserData->email, $rowndUserData->email, $random_password);
+			$username = wc_create_new_customer_username($rowndUserData->email);
+			$userId = wc_create_new_customer($rowndUserData->email, $username, $random_password);
 		} else {
 			$userId = wp_create_user($rowndUserData->email, $random_password, $rowndUserData->email);
 		}

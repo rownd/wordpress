@@ -16,7 +16,7 @@ class Plugin
 		add_action('admin_enqueue_scripts', array($this, 'register_admin_assets')); //registers all the assets required for wp-admin
 		add_action('wp_enqueue_scripts', array($this, 'register_frontend_assets')); // registers all the assets required for the frontend
 		add_action('admin_post_rownd_save_settings', array($this, 'save_settings')); //save settings of a plugin
-		add_action('profile_update', array($this, 'update_user_profile')); //update user profile
+		add_action('profile_update', array($this, 'update_user_profile'), 10, 3); //update user profile
 
 		add_filter('plugin_action_links_rownd-accounts-and-authentication/index.php', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 4);
@@ -80,7 +80,7 @@ class Plugin
 			return;
 		}
 
-		if ($this->rownd_settings['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout' == 'before_checkout') {
+		if (($this->rownd_settings['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'before_checkout') {
 			add_action('woocommerce_before_checkout_form', array($this, 'trigger_rownd_signin'), 10, 3);
 		} else {
 			add_action('woocommerce_after_order_details', array($this, 'trigger_rownd_signin'), 10, 3);
@@ -233,8 +233,15 @@ class Plugin
 		}
 	}
 
-	function trigger_rownd_signin() {
-		echo '<div data-rownd-require-sign-in></div>';
+	function trigger_rownd_signin($order = null) {
+		$userIdentifierAttr = "";
+
+		if ($order != null) {
+			$email = $order->get_billing_email();
+			$userIdentifierAttr = "data-rownd-default-user-identifier=\"{$email}\"";
+		}
+
+		echo "<div data-rownd-require-sign-in {$userIdentifierAttr}></div>";
 	}
 
 	function replace_woocommerce_login_page($template, $template_path) {
@@ -249,20 +256,24 @@ class Plugin
 	}
 
 	function update_user_profile($user_id, $old_user_data, $userdata) {
-		$rowndUserId = get_user_meta($user_id, 'rownd_id', true);
+		try {
+			$rowndUserId = get_user_meta($user_id, 'rownd_id', true);
 
-		// If we don't know the Rownd user's ID, then we can't update anything
-		if (!$rowndUserId) {
-			return;
+			// If we don't know the Rownd user's ID, then we can't update anything
+			if (empty($rowndUserId)) {
+				return;
+			}
+
+			$filteredUserData = array();
+			$filteredUserData['first_name'] = $userdata["first_name"] ?? '';
+			$filteredUserData['last_name'] = $userdata["last_name"] ?? '';
+			$filteredUserData['email'] = $userdata["user_email"];
+
+			$rowndClient = lib\RowndClient::getInstance();
+			$rowndClient->createOrUpdateRowndUser($rowndUserId, $filteredUserData);
+		} catch (\Exception $e) {
+			rownd_write_log('Error updating Rownd user profile: ' . $e->getMessage());
 		}
-
-		$filteredUserData = array();
-		$filteredUserData['first_name'] = $userdata["first_name"];
-		$filteredUserData['last_name'] = $userdata["last_name"];
-		$filteredUserData['email'] = $userdata["user_email"];
-
-		$rowndClient = lib\RowndClient::getInstance();
-		$rowndClient->createOrUpdateRowndUser($rowndUserId, $filteredUserData);
 	}
 
 	function link_wc_orders_at_registration($user_id) {
