@@ -119,7 +119,7 @@ class RowndClient
 
 	function createOrUpdateRowndUser($rowndUserId, $data) {
 		$userUrl = '/applications/' . $this->appConfig->app->id . '/users/' . $rowndUserId;
-		$resp = $this->httpClient->patch($userUrl, [
+		$resp = $this->httpClient->patch($userUrl . '/data', [
 			'json' => [
 				'data' => $data
 			]
