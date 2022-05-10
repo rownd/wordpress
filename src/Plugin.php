@@ -21,6 +21,7 @@ class Plugin
 		add_filter('plugin_action_links_rownd-accounts-and-authentication/index.php', array($this, 'plugin_action_links'), 10, 2);
 		add_filter('plugin_row_meta', array($this, 'plugin_row_meta'), 10, 4);
 		add_filter('determine_current_user', array($this, 'determine_current_user'));
+		add_filter('rest_user_query', array($this, 'search_users_by_rownd_id'), 10, 2 );
 
 		if (rownd_is_plugin_active('woocommerce/woocommerce.php')) {
 			$this->setup_woocommerce();
@@ -91,6 +92,9 @@ class Plugin
 
 		// Replace WooCommerce login pages
 		add_filter( 'wc_get_template', array($this, 'replace_woocommerce_login_page'), 1, 2 );
+
+		// Enable searching for customers by Rownd ID
+		add_filter('woocommerce_rest_customer_query', array($this, 'search_users_by_rownd_id'), 10, 2);
 	}
 
 	// admin page
@@ -211,9 +215,10 @@ class Plugin
 		}
 
 		$token = isset( $_SERVER['HTTP_AUTHORIZATION'] ) ? $_SERVER['HTTP_AUTHORIZATION'] : false;
+		$startsWithBearer = strpos( strtolower($token), 'bearer ' ) === 0;
 
-		// If no token, this won't be something Rownd can handle
-		if (!$token) {
+		// If no token or doesn't start with "bearer", this won't be something Rownd can handle
+		if (!$token || !$startsWithBearer) {
 			return $user_id;
 		}
 
@@ -278,5 +283,28 @@ class Plugin
 
 	function link_wc_orders_at_registration($user_id) {
 		wc_update_new_customer_past_orders( $user_id );
+	}
+
+	function search_users_by_rownd_id($args, $request) {
+		$rownd_id = sanitize_text_field( $request['rownd_id'] );
+
+		if (empty($rownd_id)) {
+			return $args;
+		}
+
+		$source_meta_query = array(
+			'key' => 'rownd_id',
+			'value' => $rownd_id
+		);
+
+		if ( isset( $args['meta_query'] ) ) {
+			$args['meta_query']['relation'] = 'AND';
+			$args['meta_query'][] = $source_meta_query;
+		} else {
+			$args['meta_query'] = array();
+			$args['meta_query'][] = $source_meta_query;
+		}
+
+		return $args;
 	}
 }
