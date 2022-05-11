@@ -30,6 +30,8 @@ class Authenticator
 		if (!$this->set_cookies($userId)) {
 			return false;
 		}
+
+		return $userId;
 	}
 
 	function authenticateUser($decodedRowndToken) {
@@ -60,7 +62,7 @@ class Authenticator
 			$end = microtime(true);
 			$time = number_format(($end - $start), 2);
 
-			error_log('Rownd API call to get user took ' . $time . ' seconds');
+			rownd_write_log('Rownd API call to get user took ' . $time . ' seconds');
 
 			$row = $this->findUserByEmail($rowndUser);
 		}
@@ -68,6 +70,8 @@ class Authenticator
 		// If we still didn't find the user, create one
 		if (!$row) {
 			$row = $this->createUser($rowndUser);
+		} else {
+			update_user_meta($row->ID, 'rownd_id', $rowndUserId);
 		}
 
 		return $row;
