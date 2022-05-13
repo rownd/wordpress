@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -47,11 +47,16 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Screenshots ==
 
-1. Rownd allows visitors to sign-in simply via UX components, which you can also trigger from any HTML page element.
-2. Once authenticated, users can manage their account from any page on the site.
+1. Rownd allows visitors to sign in simply via UX components, which you can also trigger from any HTML page element.
+2. Once authenticated, users can manage their accounts from any page on the site.
 3. Manage your Rownd integration easily through our simple settings pane.
 
 == Changelog ==
+
+= 1.2.4 =
+* Fix: Rownd IDs were not added to user meta when signed in by WooCommerce after checkout
+* Fix: Login links within a WooCommerce checkout flow reverted to the standard WC login form
+
 = 1.2.3 =
 * Fix: Rownd IDs were not added to user meta for existing users
 * Fix: Anonymous user ID might be set when calling the WP/WC REST API without a Rownd token
@@ -84,6 +89,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.2.4 =
+Upgrade for minor bug fixes affecting WooCommerce checkout flows
 
 = 1.2.3 =
 Upgrade for critical bug fixes
