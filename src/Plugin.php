@@ -253,7 +253,7 @@ class Plugin
 			$userIdentifierAttr = "data-rownd-default-user-identifier=\"{$email}\"";
 		}
 
-		echo "<div data-rownd-require-sign-in {$userIdentifierAttr}></div>";
+		echo "<div data-rownd-require-sign-in=\"auto-submit\" {$userIdentifierAttr}></div>";
 	}
 
 	function replace_woocommerce_login_page($template, $template_path) {

@@ -45,3 +45,15 @@ if (rownd_config_object?.start_wp_session === 'on') {
 rowndSetConfigVar('setApiUrl', rownd_config_object?.api_url);
 rowndSetConfigVar('setAppKey', rownd_config_object?.app_key);
 rowndSetConfigVar('setRootOrigin', rownd_config_object?.root_origin);
+
+window.addEventListener('load', () => {
+	var wc_login_els = document.querySelectorAll('a.showlogin');
+
+	for (let i = 0; i < wc_login_els.length; i++) {
+		wc_login_els[i].addEventListener("click", function(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+			rownd.requestSignIn();
+		});
+	}
+});
