@@ -164,6 +164,13 @@ class Plugin
 				$respData->message = 'Authentication successful';
 			} else {
 				$respData->message = 'Already authenticated';
+
+				// Make sure we get the Rownd user ID attached to the WP user.
+				// This especially covers the case where WooCommerce signs the user
+				// in as part of the checkout flow.
+				$wp_user_id = get_current_user_id();
+				$rownd_user_id = $decodedToken->claims->get('https://auth.rownd.io/app_user_id');
+				update_user_meta($wp_user_id, 'rownd_id', $rownd_user_id);
 			}
 
 		} catch (\Exception $e) {
