@@ -53,6 +53,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Changelog ==
 
+= 1.2.5 =
+* Fix: Rownd and WordPress users could become cross-contaminated in the local browser if the current WP session didn't get invalidated during sign out and another user signed into the same browser immediately thereafter.
+
 = 1.2.4 =
 * Fix: Rownd IDs were not added to user meta when signed in by WooCommerce after checkout
 * Fix: Login links within a WooCommerce checkout flow reverted to the standard WC login form
@@ -89,6 +92,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.2.5 =
+Upgrade for minor bug fixes
 
 = 1.2.4 =
 Upgrade for minor bug fixes affecting WooCommerce checkout flows
