@@ -170,7 +170,11 @@ class Plugin
 				// in as part of the checkout flow.
 				$wp_user_id = get_current_user_id();
 				$rownd_user_id = $decodedToken->claims->get('https://auth.rownd.io/app_user_id');
-				update_user_meta($wp_user_id, 'rownd_id', $rownd_user_id);
+
+				$meta_rownd_id = get_user_meta($wp_user_id, 'rownd_id', true);
+				if (empty($meta_rownd_id)) {
+					update_user_meta($wp_user_id, 'rownd_id', $rownd_user_id);
+				}
 			}
 
 		} catch (\Exception $e) {
@@ -257,12 +261,16 @@ class Plugin
 	}
 
 	function replace_woocommerce_login_page($template, $template_path) {
-		// var_dump($template_path);
-		if ($template_path != 'myaccount/form-login.php') {
+		$templateReplacements = [
+			'myaccount/form-login.php' => 'templates/woocommerce/login.php',
+			'myaccount/form-edit-account.php' => 'templates/woocommerce/form-edit-account.php',
+		];
+
+		if (empty($templateReplacements[$template_path])) {
 			return $template;
 		}
 
-		$new_path = plugin_dir_path( __FILE__ ) . 'templates/woocommerce-login.php';
+		$new_path = plugin_dir_path( __FILE__ ) . $templateReplacements[$template_path];
 
 		return $new_path;
 	}
