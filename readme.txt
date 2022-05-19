@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
