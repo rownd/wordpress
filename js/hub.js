@@ -10,16 +10,23 @@ function rowndSetConfigVar(name, value) {
 	let baseUrl = window.localStorage.getItem('rph_base_url_override') || rownd_config_object?.hub_base_url || 'https://hub.rownd.io';
 	_rphConfig.push(['setBaseUrl', baseUrl]);
 	var d = document,
-		g = d.createElement('script'),
-		s = d.getElementsByTagName('script')[0];
-	g.type = 'text/javascript';
-	g.async = true;
-	g.src = baseUrl + '/static/scripts/rph.js';
-	if (s && s.parentNode) {
-		s.parentNode.insertBefore(g, s);
-	} else {
-		d.body.appendChild(g);
-	}
+      	g = d.createElement('script'),
+      	m = d.createElement('script'),
+      	s = d.getElementsByTagName('script')[0];
+    g.noModule = true;
+    g.async = true;
+    g.src = baseUrl + '/static/scripts/rph.js';
+    m.type = 'module';
+    m.async = true;
+    m.src = baseUrl + '/static/scripts/rph.mjs';
+
+    if (s?.parentNode) {
+      	s.parentNode.insertBefore(g, s);
+      	s.parentNode.insertBefore(m, s);
+    } else {
+      	d.body.appendChild(g);
+      	d.body.appendChild(m);
+    }
 })();
 
 if (rownd_config_object?.start_wp_session === 'on') {
