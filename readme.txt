@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.2.5
+Stable tag: 1.3.0
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -53,6 +53,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Changelog ==
 
+= 1.3.0 =
+* Feature: Improves loading time for Rownd components via support for JavaScript Modules (ESM)
+
 = 1.2.5 =
 * Fix: Rownd and WordPress users could become cross-contaminated in the local browser if the current WP session didn't get invalidated during sign out and another user signed into the same browser immediately thereafter.
 
@@ -92,6 +95,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Upgrade for performance improvements
 
 = 1.2.5 =
 Upgrade for minor bug fixes
