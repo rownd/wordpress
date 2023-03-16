@@ -252,7 +252,7 @@ class Plugin
 	function trigger_rownd_signin($order = null) {
 		$userIdentifierAttr = "";
 
-		if ($order != null) {
+		if(is_a($order,'WC_Order')){
 			$email = $order->get_billing_email();
 			$userIdentifierAttr = "data-rownd-default-user-identifier=\"{$email}\"";
 		}
@@ -298,6 +298,71 @@ class Plugin
 
 	function link_wc_orders_at_registration($user_id) {
 		wc_update_new_customer_past_orders( $user_id );
+
+		$order = wc_get_customer_last_order( $user_id );
+
+		if (is_a($order,'WC_Order')) {
+
+			$customerFirstName = $order->get_billing_first_name();
+			$customerLastName =  $order->get_billing_last_name();
+
+			$customer = new \WC_Customer( $user_id );
+			$customer->set_props(
+				[
+					'billing_first_name'  => $customerFirstName,
+					'billing_last_name'   => $customerLastName,
+					'billing_company'     => $order->get_billing_company(),
+					'billing_address_1'   => $order->get_billing_address_1(),
+					'billing_address_2'   => $order->get_billing_address_2(),
+					'billing_city'        => $order->get_billing_city(),
+					'billing_state'       => $order->get_billing_state(),
+					'billing_postcode'    => $order->get_billing_postcode(),
+					'billing_country'     => $order->get_billing_country(),
+					'billing_email'       => $order->get_billing_email(),
+					'billing_phone'       => $order->get_billing_phone(),
+					'shipping_first_name' => $order->get_shipping_first_name(),
+					'shipping_last_name'  => $order->get_shipping_last_name(),
+					'shipping_company'    => $order->get_shipping_company(),
+					'shipping_address_1'  => $order->get_shipping_address_1(),
+					'shipping_address_2'  => $order->get_shipping_address_2(),
+					'shipping_city'       => $order->get_shipping_city(),
+					'shipping_state'      => $order->get_shipping_state(),
+					'shipping_postcode'   => $order->get_shipping_postcode(),
+					'shipping_country'    => $order->get_shipping_country(),
+					'shipping_phone'      => $order->get_shipping_phone(),
+				]
+			);
+			$customer->save();
+
+			//Update rownd profile with name 
+			try {
+				
+				$rowndUserId = get_user_meta($user_id, 'rownd_id', true);
+				if (empty($rowndUserId)) {
+					return;
+				}	
+				$rowndClient = lib\RowndClient::getInstance();
+				$rowndUser = $rowndClient->getRowndUser($rowndUserId); 
+				$rowndUserData = $rowndUser->data;
+	
+				$userData = new \stdClass();
+				//If the fields are empty in the rownd profile then update the wp user too 
+				//bc we used the rownd profile to create the user
+				if(empty($rowndUserData->first_name)){
+					$userData->first_name = $customerFirstName;
+					update_user_meta($user_id, 'first_name', $customerFirstName);
+				}
+				if(empty($rowndUserData->last_name)){
+					$userData->last_name = $customerLastName;
+					update_user_meta($user_id, 'last_name', $customerLastName);
+				}
+				$rowndClient->createOrUpdateRowndUser($rowndUserId, $userData);
+
+			} catch (\Exception $e) {
+				rownd_write_log('Error updating Rownd user profile: ' . $e->getMessage());
+			}
+		};
+
 	}
 
 	function search_users_by_rownd_id($args, $request) {
