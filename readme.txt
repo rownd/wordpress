@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 6.0
 Requires PHP: 7.2
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -53,6 +53,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Changelog ==
 
+= 1.3.2 =
+* Fix: Auto-submit the Rownd sign-in dialog after passing the order email address
+
 = 1.3.1 =
 * Fix: WooCommerce customers created in the after-checkout process were not updated with their last order data
 * Fix: When sign-in was triggered before the checkout process, it was attempting to access an order property from a checkout object
@@ -99,6 +102,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.3.2 =
+Upgrade for minor bug fixes affecting WooCommerce checkout flows
 
 = 1.3.1 =
 Upgrade for critical bug fixes affecting WooCommerce checkout flows
