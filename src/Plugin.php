@@ -82,9 +82,9 @@ class Plugin
 		}
 
 		if (($this->rownd_settings['woocommerce_checkout_signin_prompt_location'] ?? 'before_checkout') == 'before_checkout') {
-			add_action('woocommerce_before_checkout_form', array($this, 'trigger_rownd_signin'), 10, 3);
+			add_action('woocommerce_before_checkout_form', array($this, 'trigger_rownd_signin_before_checkout'), 10, 3);
 		} else {
-			add_action('woocommerce_after_order_details', array($this, 'trigger_rownd_signin'), 10, 3);
+			add_action('woocommerce_after_order_details', array($this, 'trigger_rownd_signin_after_checkout'), 10, 3);
 		}
 
 		// Rownd creates WordPress users, not WooCommerce customers, so we want to run this for everyone.
@@ -249,7 +249,7 @@ class Plugin
 		}
 	}
 
-	function trigger_rownd_signin($order = null) {
+	function trigger_rownd_signin_before_checkout($order = null) {
 		$userIdentifierAttr = "";
 
 		if(is_a($order,'WC_Order')){
@@ -258,6 +258,29 @@ class Plugin
 		}
 
 		echo "<div data-rownd-auto-sign-in=true data-rownd-request-sign-in {$userIdentifierAttr}></div>";
+	}
+
+	function trigger_rownd_signin_after_checkout($order=null) {
+	
+		if (is_a($order,'WC_Order')) {
+			$email = $order->get_billing_email();
+			if ($order->get_customer_id()>0) {
+				// This will handle creating a Rownd user if they're already a customer
+				// and won't force unverified users to check thier email
+				echo "<div data-rownd-auto-sign-in=true data-rownd-request-sign-in data-rownd-default-user-identifier=\"{$email}\"></div>";
+			} else {
+				// Delay sign in modal for new customers
+				echo "<script language='javascript'>\n";
+				echo "setTimeout( function() { 
+						rownd.requestSignIn({
+							auto_sign_in: true,
+							identifier:\"{$email}\",
+						});
+					}, 7000);";
+				echo "</script>\n";	
+			}
+		}
+		
 	}
 
 	function replace_woocommerce_login_page($template, $template_path) {
