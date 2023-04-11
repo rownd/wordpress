@@ -8,7 +8,7 @@
  * Author URI:      https://rownd.io
  * Text Domain:     rownd
  * Domain Path:     /languages
- * Version:         1.3.2
+ * Version:         1.3.3
  * License:		    Apache 2.0
  * License URI:     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -21,7 +21,7 @@
  */
 
 if (!defined('ROWND_PLUGIN_VERSION')) {
-	define('ROWND_PLUGIN_VERSION', '1.3.2');
+	define('ROWND_PLUGIN_VERSION', '1.3.3');
 }
 
 if (!defined('ROWND_PLUGIN_IMAGE_DIR')) {
