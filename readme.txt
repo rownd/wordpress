@@ -2,9 +2,9 @@
 Contributors: rownd, mhamann
 Tags: users, authentication, accounts, profile, woocommerce, auth, login, social login, register, signin, oauth, authorize
 Requires at least: 4.5
-Tested up to: 6.0
+Tested up to: 6.6
 Requires PHP: 7.2
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -53,8 +53,11 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 
 == Changelog ==
 
+= 1.3.4 =
+* Fix: Rownd-initiated API calls now take permalink configuration into account
+
 = 1.3.3 =
-* Feature: Delay the Rownd sign-in dialog until after showing the order details 
+* Feature: Delay the Rownd sign-in dialog until after showing the order details
 
 = 1.3.2 =
 * Fix: Auto-submit the Rownd sign-in dialog after passing the order email address
@@ -105,6 +108,9 @@ If you need additional help [read our documentation.](https://docs.rownd.io/)
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.3.4 =
+Upgrade for minor fixes to REST API interfaces
 
 = 1.3.3 =
 Upgrade for performance improvements

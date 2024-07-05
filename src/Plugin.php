@@ -136,6 +136,8 @@ class Plugin
 			$scriptVars['start_wp_session'] = 'off';
 		}
 
+		$scriptVars['wp_rest_base_url'] = get_rest_url();
+
 		wp_localize_script('rownd-hub-js', 'rownd_config_object', $scriptVars);
 	}
 
@@ -261,7 +263,7 @@ class Plugin
 	}
 
 	function trigger_rownd_signin_after_checkout($order=null) {
-	
+
 		if (is_a($order,'WC_Order')) {
 			$email = $order->get_billing_email();
 			if ($order->get_customer_id()>0) {
@@ -271,16 +273,16 @@ class Plugin
 			} else {
 				// Delay sign in modal for new customers
 				echo "<script language='javascript'>\n";
-				echo "setTimeout( function() { 
+				echo "setTimeout( function() {
 						rownd.requestSignIn({
 							auto_sign_in: true,
 							identifier:\"{$email}\",
 						});
 					}, 7000);";
-				echo "</script>\n";	
+				echo "</script>\n";
 			}
 		}
-		
+
 	}
 
 	function replace_woocommerce_login_page($template, $template_path) {
@@ -357,19 +359,19 @@ class Plugin
 			);
 			$customer->save();
 
-			//Update rownd profile with name 
+			//Update rownd profile with name
 			try {
-				
+
 				$rowndUserId = get_user_meta($user_id, 'rownd_id', true);
 				if (empty($rowndUserId)) {
 					return;
-				}	
+				}
 				$rowndClient = lib\RowndClient::getInstance();
-				$rowndUser = $rowndClient->getRowndUser($rowndUserId); 
+				$rowndUser = $rowndClient->getRowndUser($rowndUserId);
 				$rowndUserData = $rowndUser->data;
-	
+
 				$userData = new \stdClass();
-				//If the fields are empty in the rownd profile then update the wp user too 
+				//If the fields are empty in the rownd profile then update the wp user too
 				//bc we used the rownd profile to create the user
 				if(empty($rowndUserData->first_name)){
 					$userData->first_name = $customerFirstName;

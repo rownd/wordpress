@@ -32,7 +32,7 @@ function rowndSetConfigVar(name, value) {
 if (rownd_config_object?.start_wp_session === 'on') {
 	_rphConfig.push(['setPostAuthenticationApi', {
 		method: 'post',
-		url: '/wp-json/rownd/v1/auth',
+		url: rownd_config_object.wp_rest_base_url + 'rownd/v1/auth',
 		extra_headers: {
 			'x-wp-nonce': rownd_config_object.nonce
 		},
@@ -41,7 +41,7 @@ if (rownd_config_object?.start_wp_session === 'on') {
 
 	_rphConfig.push(['setPostSignOutApi', {
 		method: 'post',
-		url: '/wp-json/rownd/v1/auth/signout',
+		url: rownd_config_object.wp_rest_base_url + 'rownd/v1/auth/signout',
 		extra_headers: {
 			'x-wp-nonce': rownd_config_object.nonce
 		},
