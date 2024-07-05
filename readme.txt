@@ -4,7 +4,7 @@ Tags: users, authentication, accounts, profile, woocommerce, auth, login, social
 Requires at least: 4.5
 Tested up to: 6.6
 Requires PHP: 7.2
-Stable tag: 1.3.4
+Stable tag: 1.3.3
 License: Apache 2.0
 License URI: http://www.apache.org/licenses/LICENSE-2.0
 
@@ -29,6 +29,7 @@ Easily trigger our sign-in dialog by setting some HTML data attributes in your c
 your users verified and signed in using our unique, passwordless approach.
 
 To get started, you'll need:
+
 1. A free [Rownd account](https://app.rownd.io)
 2. A Rownd app key
 

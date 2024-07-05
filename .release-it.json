@@ -1,0 +1,30 @@
+{
+  "npm": false,
+  "git": {
+    "commitMessage": "chore: release v${version}",
+    "tagName": "${version}"
+  },
+  "github": {
+    "release": true
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    },
+    "@release-it/bumper": {
+      "in": "VERSION",
+      "out": [
+        "index.php",
+        "readme.txt",
+        "VERSION"
+      ]
+    }
+  },
+  "hooks": {
+    "after:bump": [
+      "bin/deploy.sh"
+    ],
+    "after:github:release": []
+  }
+}
