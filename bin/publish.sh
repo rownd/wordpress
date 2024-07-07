@@ -4,6 +4,9 @@ set -e
 # A modification of Dean Clatworthy's deploy script as found here: https://github.com/deanc/wordpress-plugin-git-svn
 # The difference is that this script lives in the plugin's git repo & doesn't require an existing SVN repo.
 
+DRY_RUN=${DRY_RUN:-"false"}
+echo "Dry run: $DRY_RUN"
+
 # main config
 PLUGINSLUG="rownd-accounts-and-authentication"
 CURRENTDIR=`pwd`
@@ -74,23 +77,40 @@ svn add -q --force $SVNPATH/assets/
 
 echo "Changing directory to SVN"
 cd $SVNPATH/trunk/
+
 # Add all new files that are not set to be ignored
 svn status | grep -v "^.[ \t]*\..*" | grep "^?" | awk '{print $2}' | xargs svn add
 echo "committing to trunk"
-svn commit --username=$SVNUSER -m "$COMMITMSG" --force-interactive
 
+if [ $DRY_RUN == 'false' ]; then
+	echo "SVN commit"
+	# svn commit --username=$SVNUSER -m "$COMMITMSG" --force-interactive
+fi
+
+# Update WP assets folders
 echo "Updating WP plugin repo assets & committing"
 cd $SVNPATH/assets/
-svn commit --username=$SVNUSER -m "Updating plugin assets" --force-interactive
+if [ $DRY_RUN == 'false' ]; then
+	echo "SVN commit"
+	# svn commit --username=$SVNUSER -m "Updating plugin assets" --force-interactive
+fi
 
+# Tag the release
 echo "Creating new SVN tag & committing it"
 echo "Tag name: $NEWVERSION1"
 cd $SVNPATH
 svn copy trunk/ tags/$NEWVERSION1/
 cd $SVNPATH/tags/$NEWVERSION1
-svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1" --force-interactive
+
+if [ $DRY_RUN == 'false' ]; then
+	echo "SVN commit"
+	# svn commit --username=$SVNUSER -m "Tagging version $NEWVERSION1" --force-interactive
+fi
 
 echo "Removing temporary directory $SVNPATH"
-rm -fr $SVNPATH/
 
-echo "*** FIN ***"
+if [ $DRY_RUN == 'false' ]; then
+	rm -fr $SVNPATH/
+fi
+
+echo "*** DONE ***"
