@@ -1,5 +1,7 @@
 
 
+## [1.3.5](https://github.com/rownd/wordpress/compare/1.3.4...1.3.5) (2024-07-07)
+
 ## [1.3.4](https://github.com/rownd/wordpress/compare/v1.3.3...1.3.4) (2024-07-05)
 
 
