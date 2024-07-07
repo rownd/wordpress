@@ -23,7 +23,7 @@
   },
   "hooks": {
     "after:bump": [
-      "bin/deploy.sh"
+      "bin/publish.sh"
     ],
     "after:github:release": []
   }
